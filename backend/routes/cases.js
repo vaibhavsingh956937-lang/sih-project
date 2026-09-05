@@ -4,6 +4,13 @@ const { requireAuth } = require('../middleware/auth');
 const CaseSheet = require('../models/CaseSheet');
 const Patient = require('../models/Patient');
 
+// Helper to convert empty strings to null
+const cleanVal = (val) => {
+  if (val === undefined || val === null) return null;
+  const str = String(val).trim();
+  return str === '' ? null : str;
+};
+
 // POST /api/cases (create new case sheet, protected)
 router.post('/', requireAuth, async (req, res) => {
   try {
@@ -18,43 +25,74 @@ router.post('/', requireAuth, async (req, res) => {
       medicines_prescribed,
       dosage_instructions,
       follow_up_date,
-      notes
+      notes,
+      bp,
+      pulse,
+      weight,
+      temperature,
+      spo2,
+      prakriti_vata,
+      prakriti_pitta,
+      prakriti_kapha,
+      attachment_url
     } = req.body;
 
-    if (!patient_aadhar || !chief_complaint) {
+    const cleanAadhar = cleanVal(patient_aadhar);
+    const cleanComplaint = cleanVal(chief_complaint);
+
+    if (!cleanAadhar || !cleanComplaint) {
       return res.status(400).json({ error: 'Patient Aadhar number and Chief Complaint are mandatory fields.' });
     }
 
-    if (!diagnosis && !treatment_plan) {
+    if (!cleanVal(diagnosis) && !cleanVal(treatment_plan)) {
       return res.status(400).json({ error: 'At least Diagnosis or Treatment Plan must be provided for the case sheet.' });
     }
 
     // Verify patient exists
-    const patient = await Patient.findByAadhar(patient_aadhar);
+    const patient = await Patient.findByAadhar(cleanAadhar);
     if (!patient) {
-      return res.status(404).json({ error: `Cannot save case sheet: Patient with Aadhar ${patient_aadhar} is not registered.` });
+      return res.status(404).json({ error: `Cannot save case sheet: Patient with Aadhar ${cleanAadhar} is not registered.` });
     }
 
-    const selectedSystem = ayush_system || req.doctor.ayush_system || 'Ayurveda';
+    const selectedSystem = cleanVal(ayush_system) || req.doctor.ayush_system || 'Ayurveda';
+
+    // Normalize follow_up_date
+    let validFollowUp = cleanVal(follow_up_date);
+    if (validFollowUp && isNaN(new Date(validFollowUp).getTime())) {
+      validFollowUp = null;
+    }
 
     const newCase = await CaseSheet.create({
-      patient_aadhar,
+      patient_aadhar: cleanAadhar,
       doctor_id: req.doctor.id,
       ayush_system: selectedSystem,
-      chief_complaint,
-      symptoms,
-      examination_findings,
-      diagnosis,
-      treatment_plan,
-      medicines_prescribed,
-      dosage_instructions,
-      follow_up_date: follow_up_date || null,
-      notes
+      chief_complaint: cleanComplaint,
+      symptoms: cleanVal(symptoms),
+      examination_findings: cleanVal(examination_findings),
+      diagnosis: cleanVal(diagnosis),
+      treatment_plan: cleanVal(treatment_plan),
+      medicines_prescribed: cleanVal(medicines_prescribed),
+      dosage_instructions: cleanVal(dosage_instructions),
+      follow_up_date: validFollowUp,
+      notes: cleanVal(notes),
+      bp: cleanVal(bp),
+      pulse: cleanVal(pulse),
+      weight: cleanVal(weight),
+      temperature: cleanVal(temperature),
+      spo2: cleanVal(spo2),
+      prakriti_vata: parseInt(prakriti_vata || 33, 10),
+      prakriti_pitta: parseInt(prakriti_pitta || 33, 10),
+      prakriti_kapha: parseInt(prakriti_kapha || 34, 10),
+      attachment_url: cleanVal(attachment_url)
     });
 
     return res.status(201).json({
       message: 'Case sheet saved successfully',
-      case: newCase
+      case: {
+        ...newCase,
+        doctor_name: req.doctor.name,
+        doctor_system: req.doctor.ayush_system
+      }
     });
   } catch (err) {
     console.error('Create case sheet error:', err);

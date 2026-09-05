@@ -9,13 +9,13 @@
 <body>
 
   <div class="container auth-wrapper">
-    <div class="auth-header">
-      <div class="brand-logo" style="margin: 0 auto 12px; width: 48px; height: 48px; font-size: 22px;">🩺</div>
-      <h1>Doctor Registration</h1>
-      <p>Join the AYUSH Integrated OPD Network</p>
-    </div>
+    <div class="card auth-card">
+      <div class="auth-header">
+        <div class="brand-logo" style="margin: 10px auto 14px; width: 56px; height: 56px; font-size: 26px; border-radius: 16px;">🩺</div>
+        <h1>Doctor Registration</h1>
+        <p>Join the Integrated AYUSH OPD Care Network</p>
+      </div>
 
-    <div class="card">
       <div id="alert-container"></div>
 
       <form id="register-form">
@@ -32,11 +32,11 @@
         <div class="form-group">
           <label for="ayush_system">Primary AYUSH System</label>
           <select id="ayush_system" class="form-control" required>
-            <option value="Ayurveda" selected>Ayurveda</option>
-            <option value="Yoga & Naturopathy">Yoga & Naturopathy</option>
-            <option value="Unani">Unani</option>
-            <option value="Siddha">Siddha</option>
-            <option value="Homeopathy">Homeopathy</option>
+            <option value="Ayurveda" selected>🌿 Ayurveda</option>
+            <option value="Yoga & Naturopathy">🧘 Yoga & Naturopathy</option>
+            <option value="Unani">🌱 Unani</option>
+            <option value="Siddha">⚕️ Siddha</option>
+            <option value="Homeopathy">💧 Homeopathy</option>
           </select>
         </div>
 
@@ -51,13 +51,13 @@
           </div>
         </div>
 
-        <button type="submit" id="btn-register" class="btn btn-primary btn-block" style="margin-top: 10px;">
-          Create Doctor Account
+        <button type="submit" id="btn-register" class="btn btn-primary btn-block" style="padding: 13px; font-size: 15px; margin-top: 6px;">
+          Create Doctor Account →
         </button>
       </form>
 
-      <div style="margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-muted);">
-        Already have an account? <a href="index.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a>
+      <div style="margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-secondary);">
+        Already have an account? <a href="index.html" style="color: var(--primary); font-weight: 700; text-decoration: none;">Login here</a>
       </div>
     </div>
   </div>
@@ -105,7 +105,7 @@
       } catch (err) {
         alertContainer.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
         btn.disabled = false;
-        btn.innerText = 'Create Doctor Account';
+        btn.innerText = 'Create Doctor Account →';
       }
     });
   </script>

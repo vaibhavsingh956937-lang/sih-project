@@ -13,20 +13,31 @@ class CaseSheet {
     medicines_prescribed,
     dosage_instructions,
     follow_up_date,
-    notes
+    notes,
+    bp,
+    pulse,
+    weight,
+    temperature,
+    spo2,
+    prakriti_vata,
+    prakriti_pitta,
+    prakriti_kapha,
+    attachment_url
   }) {
     const text = `
       INSERT INTO case_sheets (
         patient_aadhar, doctor_id, ayush_system, chief_complaint,
         symptoms, examination_findings, diagnosis, treatment_plan,
-        medicines_prescribed, dosage_instructions, follow_up_date, notes
+        medicines_prescribed, dosage_instructions, follow_up_date, notes,
+        bp, pulse, weight, temperature, spo2,
+        prakriti_vata, prakriti_pitta, prakriti_kapha, attachment_url
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
       RETURNING *
     `;
     const params = [
-      patient_aadhar,
-      doctor_id,
+      String(patient_aadhar).trim(),
+      parseInt(doctor_id, 10),
       ayush_system || 'Ayurveda',
       chief_complaint,
       symptoms || null,
@@ -36,7 +47,16 @@ class CaseSheet {
       medicines_prescribed || null,
       dosage_instructions || null,
       follow_up_date || null,
-      notes || null
+      notes || null,
+      bp || null,
+      pulse || null,
+      weight || null,
+      temperature || null,
+      spo2 || null,
+      parseInt(prakriti_vata || 33, 10),
+      parseInt(prakriti_pitta || 33, 10),
+      parseInt(prakriti_kapha || 34, 10),
+      attachment_url || null
     ];
 
     const result = await db.query(text, params);
@@ -45,7 +65,9 @@ class CaseSheet {
 
   static async findById(id) {
     const text = `
-      SELECT c.*, d.name AS doctor_name, d.email AS doctor_email, p.full_name AS patient_name
+      SELECT c.*, d.name AS doctor_name, d.email AS doctor_email, d.ayush_system AS doctor_system,
+             p.full_name AS patient_name, p.gender AS patient_gender, p.date_of_birth AS patient_dob,
+             p.phone AS patient_phone, p.address AS patient_address, p.opd_token AS patient_opd_token
       FROM case_sheets c
       JOIN doctors d ON c.doctor_id = d.id
       JOIN patients p ON c.patient_aadhar = p.aadhar_number
@@ -64,7 +86,22 @@ class CaseSheet {
       ORDER BY c.visit_date DESC
       LIMIT $2
     `;
-    const result = await db.query(text, [patient_aadhar, limit]);
+    const result = await db.query(text, [String(patient_aadhar).trim(), limit]);
+    return result.rows;
+  }
+
+  static async getFollowUpSchedule() {
+    const text = `
+      SELECT c.id, c.patient_aadhar, c.follow_up_date, c.chief_complaint, c.diagnosis, c.ayush_system,
+             p.full_name AS patient_name, p.phone AS patient_phone, d.name AS doctor_name
+      FROM case_sheets c
+      JOIN patients p ON c.patient_aadhar = p.aadhar_number
+      JOIN doctors d ON c.doctor_id = d.id
+      WHERE c.follow_up_date IS NOT NULL
+      ORDER BY c.follow_up_date ASC
+      LIMIT 100
+    `;
+    const result = await db.query(text);
     return result.rows;
   }
 
@@ -88,10 +125,9 @@ class CaseSheet {
         return result.rows[0];
       }
     } catch (err) {
-      // Fallback query formatting for databases without json_object_agg
+      // Fallback query formatting
     }
 
-    // Direct aggregation fallback
     const resPatients = await db.query(`SELECT COUNT(*) AS total FROM patients`);
     const resCases = await db.query(`SELECT COUNT(*) AS total FROM case_sheets`);
     const resToday = await db.query(`SELECT COUNT(*) AS total FROM case_sheets WHERE DATE(visit_date) = CURRENT_DATE`);

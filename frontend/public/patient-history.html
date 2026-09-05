@@ -11,7 +11,9 @@
   <!-- Top Navigation Bar -->
   <header class="top-navbar">
     <a href="dashboard.html" class="brand-container">
-      <div class="brand-logo">🌿</div>
+      <div class="brand-logo-wrapper">
+        <div class="brand-logo">🌿</div>
+      </div>
       <div>
         <div class="brand-title">AYUSH OPD CMS</div>
         <div class="brand-subtitle">Digital Patient Case Management</div>
@@ -19,82 +21,92 @@
     </a>
 
     <div class="nav-user-info">
-      <div class="user-badge">
-        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
-        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      <div class="nav-controls">
+        <button id="btn-toggle-lang" class="btn-icon-toggle">🌐 हिंदी</button>
+        <button id="btn-toggle-theme" class="btn-icon-toggle">🌙 Theme</button>
+      </div>
+
+      <div class="user-badge-card">
+        <div class="user-avatar-circle">🩺</div>
+        <div>
+          <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+          <div id="nav-user-system" class="user-system">Ayurveda</div>
+        </div>
       </div>
       <button id="btn-logout" class="btn-logout">Logout</button>
     </div>
   </header>
 
   <main class="container">
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+    <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
       <div>
-        <a href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 13px;">← Back to Directory</a>
-        <h1 style="font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 4px;">Patient Medical Profile & History</h1>
-        <p style="color: var(--text-muted); font-size: 13px;">Continuity of Care across AYUSH Specialties.</p>
+        <a href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 13px;">← Back to OPD Directory</a>
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--primary-deep); margin-top: 4px; letter-spacing: -0.4px;">Patient Medical Profile & Timeline</h1>
+        <p style="color: var(--text-secondary); font-size: 13.5px;">Integrated Continuity of Care across AYUSH Specialties.</p>
       </div>
 
-      <a id="btn-add-case" href="#" class="btn btn-primary">
-        + Add New Case Sheet
+      <a id="btn-add-case" href="#" class="btn btn-primary" style="padding: 12px 24px; border-radius: var(--radius-pill);">
+        <span style="font-size: 16px; font-weight: 800;">+</span> Add New Case Sheet
       </a>
     </div>
 
     <!-- Patient Demographics Profile Card -->
-    <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
-        <div style="flex: 1; min-width: 250px;">
-          <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 2px;">Registered Patient</div>
-          <h2 id="patient-name" style="font-size: 24px; font-weight: 800; color: var(--primary);">Loading Patient...</h2>
+    <div class="card" style="border: 1px solid var(--border); box-shadow: var(--shadow-md);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 260px;">
+          <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px;">Registered Patient</div>
+          <h2 id="patient-name" style="font-size: 26px; font-weight: 800; color: var(--primary-deep); margin-top: 2px;">Loading Patient...</h2>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 18px;">
             <div>
-              <span style="color: var(--text-muted); font-size: 12px; display: block;">Age / Gender</span>
-              <strong id="patient-age-gender" style="font-size: 14px; color: var(--text-dark);">-</strong>
+              <span style="color: var(--text-muted); font-size: 12px; font-weight: 700; display: block;">Age / Gender</span>
+              <strong id="patient-age-gender" style="font-size: 15px; color: var(--text-primary);">-</strong>
             </div>
             <div>
-              <span style="color: var(--text-muted); font-size: 12px; display: block;">Phone Number</span>
-              <strong id="patient-phone" style="font-size: 14px; color: var(--text-dark);">-</strong>
+              <span style="color: var(--text-muted); font-size: 12px; font-weight: 700; display: block;">Phone Number</span>
+              <strong id="patient-phone" style="font-size: 15px; color: var(--text-primary);">-</strong>
             </div>
             <div>
-              <span style="color: var(--text-muted); font-size: 12px; display: block;">Village / District</span>
-              <strong id="patient-location" style="font-size: 14px; color: var(--text-dark);">-</strong>
+              <span style="color: var(--text-muted); font-size: 12px; font-weight: 700; display: block;">Village / District</span>
+              <strong id="patient-location" style="font-size: 15px; color: var(--text-primary);">-</strong>
             </div>
             <div>
-              <span style="color: var(--text-muted); font-size: 12px; display: block;">State</span>
-              <strong id="patient-state" style="font-size: 14px; color: var(--text-dark);">-</strong>
+              <span style="color: var(--text-muted); font-size: 12px; font-weight: 700; display: block;">State</span>
+              <strong id="patient-state" style="font-size: 15px; color: var(--text-primary);">-</strong>
             </div>
           </div>
 
-          <div id="patient-address" style="margin-top: 12px; font-size: 13px; color: var(--text-muted);">
+          <div id="patient-address" style="margin-top: 14px; font-size: 13px; color: var(--text-secondary); font-weight: 500;">
             Address: -
           </div>
         </div>
 
-        <div style="background: var(--accent-light); padding: 16px; border-radius: var(--radius-btn); border: 1px solid rgba(0,168,150,0.3); text-align: center; min-width: 220px;">
-          <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary-dark);">Aadhar Identifier (Primary)</div>
-          <div id="patient-aadhar-masked" style="font-family: monospace; font-size: 20px; font-weight: 800; color: var(--primary); margin: 6px 0;">XXXX-XXXX-XXXX</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Unique 12-digit Medical ID</div>
+        <div style="background: linear-gradient(135deg, #e6f4f2 0%, #f0fbf9 100%); padding: 18px 24px; border-radius: var(--radius-md); border: 1.5px solid rgba(15,110,106,0.2); text-align: center; min-width: 230px; box-shadow: var(--shadow-sm);">
+          <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--primary-deep); letter-spacing: 0.5px;">Aadhar Identifier (Primary)</div>
+          <div id="patient-aadhar-masked" class="aadhar-code" style="font-size: 21px; margin: 6px 0;">XXXX-XXXX-XXXX</div>
+          <div style="font-size: 11.5px; font-weight: 600; color: var(--text-muted);">
+            OPD Token: <strong id="patient-opd-token" class="token-badge">OPD-2026-001</strong>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Timeline Title -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 32px; margin-bottom: 12px;">
-      <h2 style="font-size: 18px; font-weight: 700; color: var(--primary);">Case History Timeline</h2>
-      <span id="case-count-badge" class="badge-system badge-ayurveda">0 Visits Recorded</span>
+    <!-- Timeline Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 36px; margin-bottom: 16px;">
+      <h2 style="font-size: 20px; font-weight: 800; color: var(--primary-deep);">Case History Timeline</h2>
+      <span id="case-count-badge" class="badge-system badge-ayurveda" style="font-size: 13px; padding: 6px 14px;">0 Visits Recorded</span>
     </div>
 
     <!-- Timeline Container -->
     <div id="timeline-container" class="timeline">
-      <div style="padding: 24px; text-align: center; color: var(--text-muted);">Loading case sheet history...</div>
+      <div style="padding: 28px; text-align: center; color: var(--text-muted); font-weight: 600;">Loading medical case timeline...</div>
     </div>
   </main>
 
-  <!-- Modal for Full Case Sheet View -->
-  <div id="case-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9990; align-items: center; justify-content: center; padding: 16px;">
-    <div class="card" style="max-width: 750px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative;">
-      <button onclick="closeModal()" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
+  <!-- Modal Dialog for Full Case Details -->
+  <div id="case-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 59, 56, 0.65); backdrop-filter: blur(8px); z-index: 9990; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 780px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+      <button onclick="closeModal()" style="position: absolute; top: 20px; right: 20px; background: transparent; border: none; font-size: 26px; cursor: pointer; color: var(--text-muted); font-weight: 800;">&times;</button>
       
       <div id="modal-content">
         <!-- Dynamically rendered -->
@@ -110,6 +122,7 @@
   <script src="../js/app.js"></script>
   <script>
     let currentAadhar = null;
+    let patientCache = null;
     let casesCache = [];
 
     async function loadPatientHistory() {
@@ -126,17 +139,17 @@
 
       try {
         const res = await API.patients.getDetails(currentAadhar);
-        const p = res.patient;
+        patientCache = res.patient;
         casesCache = res.cases || [];
 
-        // Fill Demographics
-        document.getElementById('patient-name').innerText = p.full_name;
-        document.getElementById('patient-age-gender').innerText = `${p.age !== null ? p.age + ' yrs' : 'N/A'} / ${p.gender || 'N/A'}`;
-        document.getElementById('patient-phone').innerText = p.phone || 'N/A';
-        document.getElementById('patient-location').innerText = `${p.village || 'N/A'}, ${p.district || 'N/A'}`;
-        document.getElementById('patient-state').innerText = p.state || 'N/A';
-        document.getElementById('patient-address').innerText = `Address: ${p.address || 'Not specified'}`;
-        document.getElementById('patient-aadhar-masked').innerText = App.maskAadhar(p.aadhar_number);
+        document.getElementById('patient-name').innerText = patientCache.full_name;
+        document.getElementById('patient-age-gender').innerText = `${patientCache.age !== null ? patientCache.age + ' yrs' : 'N/A'} / ${patientCache.gender || 'N/A'}`;
+        document.getElementById('patient-phone').innerText = patientCache.phone || 'N/A';
+        document.getElementById('patient-location').innerText = `${patientCache.village || 'N/A'}, ${patientCache.district || 'N/A'}`;
+        document.getElementById('patient-state').innerText = patientCache.state || 'N/A';
+        document.getElementById('patient-address').innerText = `Address: ${patientCache.address || 'Not specified'}`;
+        document.getElementById('patient-aadhar-masked').innerText = App.maskAadhar(patientCache.aadhar_number);
+        document.getElementById('patient-opd-token').innerText = patientCache.opd_token || 'OPD-2026';
         document.getElementById('case-count-badge').innerText = `${casesCache.length} Visit(s) Recorded`;
 
         renderTimeline(casesCache);
@@ -152,8 +165,8 @@
 
       if (cases.length === 0) {
         container.innerHTML = `
-          <div class="case-card" style="text-align: center; padding: 32px;">
-            <div style="font-size: 15px; color: var(--text-muted); margin-bottom: 12px;">No past case sheets recorded for this patient yet.</div>
+          <div class="case-card" style="text-align: center; padding: 36px;">
+            <div style="font-size: 15px; color: var(--text-muted); margin-bottom: 14px; font-weight: 600;">No past case sheets recorded for this patient yet.</div>
             <a href="case-new.html?aadhar=${encodeURIComponent(currentAadhar)}" class="btn btn-primary">
               + Create First Case Sheet
             </a>
@@ -162,7 +175,12 @@
         return;
       }
 
-      container.innerHTML = cases.map((c, index) => `
+      container.innerHTML = cases.map((c, index) => {
+        const vata = c.prakriti_vata || 33;
+        const pitta = c.prakriti_pitta || 33;
+        const kapha = c.prakriti_kapha || 34;
+
+        return `
         <div class="timeline-item">
           <div class="timeline-dot"></div>
           <div class="case-card">
@@ -174,36 +192,64 @@
               <div class="case-doctor">👨‍⚕️ Attending: <strong>${c.doctor_name || 'Dr. AYUSH'}</strong></div>
             </div>
 
+            <!-- Vitals Bar -->
+            ${(c.bp || c.pulse || c.weight) ? `
+              <div style="background: var(--card-glass); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; gap: 14px; flex-wrap: wrap;">
+                ${c.bp ? `<span>🩺 <strong>BP:</strong> ${c.bp}</span>` : ''}
+                ${c.pulse ? `<span>❤️ <strong>Pulse:</strong> ${c.pulse} bpm</span>` : ''}
+                ${c.weight ? `<span>⚖️ <strong>Weight:</strong> ${c.weight} kg</span>` : ''}
+                ${c.spo2 ? `<span>🫁 <strong>SpO2:</strong> ${c.spo2}%</span>` : ''}
+              </div>
+            ` : ''}
+
+            <!-- Tridosha Prakriti Bar -->
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;">
+                Dosha Balance (Vata: ${vata}% | Pitta: ${pitta}% | Kapha: ${kapha}%)
+              </div>
+              <div class="prakriti-meter-container">
+                <div class="prakriti-segment-vata" style="width: ${vata}%;"></div>
+                <div class="prakriti-segment-pitta" style="width: ${pitta}%;"></div>
+                <div class="prakriti-segment-kapha" style="width: ${kapha}%;"></div>
+              </div>
+            </div>
+
             <div class="case-section">
               <div class="case-section-title">Chief Complaint</div>
-              <div class="case-section-content" style="font-weight: 600; color: var(--primary-dark);">${c.chief_complaint}</div>
+              <div class="case-section-content" style="font-weight: 700; color: var(--primary-deep); font-size: 15px;">${c.chief_complaint}</div>
             </div>
 
             ${c.diagnosis ? `
               <div class="case-section">
                 <div class="case-section-title">Diagnosis</div>
-                <div class="case-section-content">${c.diagnosis}</div>
+                <div class="case-section-content" style="font-weight: 600;">${c.diagnosis}</div>
               </div>
             ` : ''}
 
             ${c.medicines_prescribed ? `
               <div class="case-section">
                 <div class="case-section-title">Medicines Prescribed</div>
-                <div class="case-section-content" style="background: var(--bg); padding: 8px 12px; border-radius: var(--radius-btn); border: 1px dashed var(--border); font-family: inherit;">${c.medicines_prescribed}</div>
+                <div class="case-section-content" style="background: var(--ayurveda-bg); padding: 10px 14px; border-radius: var(--radius-md); border: 1px dashed var(--border); font-family: inherit; font-size: 13.5px;">${c.medicines_prescribed}</div>
               </div>
             ` : ''}
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap; gap: 8px;">
-              <div style="font-size: 12px; color: var(--text-muted);">
-                ${c.follow_up_date ? `⏰ <strong>Follow-up Scheduled:</strong> ${App.formatDate(c.follow_up_date)}` : 'No follow-up date scheduled'}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; flex-wrap: wrap; gap: 10px;">
+              <div style="font-size: 12.5px; color: var(--text-secondary); font-weight: 600;">
+                ${c.follow_up_date ? `⏰ <strong>Follow-up:</strong> ${App.formatDate(c.follow_up_date)}` : 'No follow-up date scheduled'}
               </div>
-              <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="viewFullCase(${index})">
-                👁️ View Full Details
-              </button>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary" style="padding: 5px 12px; font-size: 12px; border-radius: var(--radius-pill);" onclick="App.printPrescription(casesCache[${index}], patientCache)">
+                  🖨️ Print Rx
+                </button>
+                <button class="btn btn-primary" style="padding: 5px 12px; font-size: 12px; border-radius: var(--radius-pill);" onclick="viewFullCase(${index})">
+                  👁️ Full Details
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function viewFullCase(index) {
@@ -212,19 +258,24 @@
 
       const modalContent = document.getElementById('modal-content');
       modalContent.innerHTML = `
-        <div class="card-title">
-          <span>Case Sheet Details #${c.id}</span>
-          ${App.getSystemBadgeHTML(c.ayush_system)}
+        <div class="card-header-bar">
+          <div class="card-title">
+            <span>Case Sheet #${c.id}</span>
+            ${App.getSystemBadgeHTML(c.ayush_system)}
+          </div>
+          <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="App.printPrescription(casesCache[${index}], patientCache)">
+            🖨️ Print Rx Prescription
+          </button>
         </div>
 
-        <div style="display: flex; gap: 16px; background: var(--bg); padding: 12px; border-radius: var(--radius-btn); margin-bottom: 16px; font-size: 13px;">
+        <div style="display: flex; gap: 18px; background: var(--card-glass); padding: 14px 18px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 13.5px; border: 1px solid var(--border); flex-wrap: wrap;">
           <div><strong>Visit Date:</strong> ${App.formatDateTime(c.visit_date)}</div>
-          <div><strong>Doctor:</strong> ${c.doctor_name || 'Dr. AYUSH'}</div>
+          <div><strong>Attending Doctor:</strong> ${c.doctor_name || 'Dr. AYUSH'}</div>
         </div>
 
         <div class="case-section">
           <div class="case-section-title">Chief Complaint & Primary Symptoms</div>
-          <div class="case-section-content" style="font-weight: 600;">${c.chief_complaint}</div>
+          <div class="case-section-content" style="font-weight: 700; color: var(--primary-deep); font-size: 15px;">${c.chief_complaint}</div>
         </div>
 
         ${c.symptoms ? `
@@ -237,14 +288,14 @@
         ${c.examination_findings ? `
           <div class="case-section">
             <div class="case-section-title">Examination Findings (Pulse / Nadi / Tongue / Vitals)</div>
-            <div class="case-section-content">${c.examination_findings}</div>
+            <div class="case-section-content" style="background: var(--card-glass); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);">${c.examination_findings}</div>
           </div>
         ` : ''}
 
         ${c.diagnosis ? `
           <div class="case-section">
             <div class="case-section-title">Clinical & AYUSH Diagnosis</div>
-            <div class="case-section-content">${c.diagnosis}</div>
+            <div class="case-section-content" style="font-weight: 700;">${c.diagnosis}</div>
           </div>
         ` : ''}
 
@@ -258,7 +309,7 @@
         ${c.medicines_prescribed ? `
           <div class="case-section">
             <div class="case-section-title">Medicines Prescribed</div>
-            <div class="case-section-content" style="background: var(--accent-light); padding: 10px; border-radius: var(--radius-btn);">${c.medicines_prescribed}</div>
+            <div class="case-section-content" style="background: var(--ayurveda-bg); padding: 12px; border-radius: var(--radius-md); border: 1px dashed var(--border); font-weight: 600;">${c.medicines_prescribed}</div>
           </div>
         ` : ''}
 
@@ -269,6 +320,15 @@
           </div>
         ` : ''}
 
+        ${c.attachment_url ? `
+          <div class="case-section">
+            <div class="case-section-title">📎 Attached Diagnostic Report</div>
+            <div class="case-section-content">
+              <a href="${c.attachment_url}" target="_blank" style="color: var(--primary); font-weight: 700;">View Report Document ↗</a>
+            </div>
+          </div>
+        ` : ''}
+
         ${c.notes ? `
           <div class="case-section">
             <div class="case-section-title">Additional Clinical Notes</div>
@@ -276,8 +336,9 @@
           </div>
         ` : ''}
 
-        <div style="margin-top: 20px; text-align: right;">
-          <button class="btn btn-secondary" onclick="closeModal()">Close Details</button>
+        <div style="margin-top: 24px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+          <button class="btn btn-secondary" onclick="App.printPrescription(casesCache[${index}], patientCache)">🖨️ Print Rx</button>
+          <button class="btn btn-primary" onclick="closeModal()" style="border-radius: var(--radius-pill);">Close</button>
         </div>
       `;
 

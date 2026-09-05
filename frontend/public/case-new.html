@@ -11,7 +11,9 @@
   <!-- Top Navigation Bar -->
   <header class="top-navbar">
     <a href="dashboard.html" class="brand-container">
-      <div class="brand-logo">🌿</div>
+      <div class="brand-logo-wrapper">
+        <div class="brand-logo">🌿</div>
+      </div>
       <div>
         <div class="brand-title">AYUSH OPD CMS</div>
         <div class="brand-subtitle">Digital Patient Case Management</div>
@@ -19,35 +21,59 @@
     </a>
 
     <div class="nav-user-info">
-      <div class="user-badge">
-        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
-        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      <div class="nav-controls">
+        <button id="btn-toggle-lang" class="btn-icon-toggle">🌐 हिंदी</button>
+        <button id="btn-toggle-theme" class="btn-icon-toggle">🌙 Theme</button>
+      </div>
+
+      <div class="user-badge-card">
+        <div class="user-avatar-circle">🩺</div>
+        <div>
+          <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+          <div id="nav-user-system" class="user-system">Ayurveda</div>
+        </div>
       </div>
       <button id="btn-logout" class="btn-logout">Logout</button>
     </div>
   </header>
 
   <main class="container">
-    <div style="margin-bottom: 20px;">
-      <a id="back-link" href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 13px;">← Back</a>
-      <h1 style="font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 6px;">Create New AYUSH Case Sheet</h1>
-      <p style="color: var(--text-muted); font-size: 13px;">Record diagnostic findings, treatment plans, and prescriptions for the current visit.</p>
+    <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <a id="back-link" href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 13px;">← Back to Timeline</a>
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--primary-deep); margin-top: 6px; letter-spacing: -0.4px;">Create New AYUSH Case Sheet</h1>
+        <p style="color: var(--text-secondary); font-size: 13.5px;">Record diagnostic findings, vitals, Prakriti, and prescriptions.</p>
+      </div>
+
+      <!-- Quick Template Selector Dropdown -->
+      <div style="background: var(--card-bg); padding: 10px 16px; border-radius: var(--radius-md); border: 1.5px solid var(--primary); box-shadow: var(--shadow-sm);">
+        <label for="template-select" style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--primary); display: block; margin-bottom: 4px;">
+          ⚡ Quick AYUSH Formula Templates
+        </label>
+        <select id="template-select" class="form-control" style="padding: 6px 12px; font-size: 13px; font-weight: 700;" onchange="App.applyTemplate(this.value)">
+          <option value="" selected>Select Pre-built Clinical Template...</option>
+          <option value="kativata">🌿 Kativata (Lumbago / Back Stiffness)</option>
+          <option value="amlapitta">🔥 Amlapitta (Dyspepsia / GERD)</option>
+          <option value="pratishyaya">🤧 Kaphaja Pratishyaya (Allergic Rhinitis)</option>
+          <option value="prameha">🩸 Madhumeha (Diabetes Care)</option>
+        </select>
+      </div>
     </div>
 
-    <!-- Patient Header Card -->
-    <div class="card" style="background: var(--accent-light); border-color: rgba(0,168,150,0.3); padding: 18px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <!-- Patient Summary Banner Card -->
+    <div class="card" style="background: linear-gradient(135deg, #e6f4f2 0%, #f0fbf9 100%); border: 1.5px solid rgba(15,110,106,0.2); padding: 22px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
         <div>
-          <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary-dark);">Patient Demographics</span>
-          <h2 id="patient-name" style="font-size: 20px; font-weight: 700; color: var(--primary);">Loading...</h2>
-          <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+          <span style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--primary-deep); letter-spacing: 0.5px;">Patient Demographics</span>
+          <h2 id="patient-name" style="font-size: 22px; font-weight: 800; color: var(--primary-deep); margin-top: 2px;">Loading...</h2>
+          <div style="font-size: 13.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 500;">
             <span id="patient-gender-age">Age / Gender: -</span> | 
             <span id="patient-phone">Phone: -</span>
           </div>
         </div>
-        <div style="text-align: right;">
-          <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary-dark);">Aadhar Identifier</span>
-          <div id="patient-aadhar-masked" style="font-family: monospace; font-size: 18px; font-weight: 800; color: var(--primary);">XXXX-XXXX-XXXX</div>
+        <div style="background: #ffffff; padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid var(--border); text-align: right; box-shadow: var(--shadow-sm);">
+          <span style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted);">Aadhar ID</span>
+          <div id="patient-aadhar-masked" class="aadhar-code" style="font-size: 19px; margin-top: 2px;">XXXX-XXXX-XXXX</div>
         </div>
       </div>
     </div>
@@ -61,11 +87,11 @@
           <div class="form-group">
             <label for="ayush_system">AYUSH System for this Visit *</label>
             <select id="ayush_system" class="form-control" required>
-              <option value="Ayurveda">Ayurveda</option>
-              <option value="Yoga & Naturopathy">Yoga & Naturopathy</option>
-              <option value="Unani">Unani</option>
-              <option value="Siddha">Siddha</option>
-              <option value="Homeopathy">Homeopathy</option>
+              <option value="Ayurveda">🌿 Ayurveda</option>
+              <option value="Yoga & Naturopathy">🧘 Yoga & Naturopathy</option>
+              <option value="Unani">🌱 Unani</option>
+              <option value="Siddha">⚕️ Siddha</option>
+              <option value="Homeopathy">💧 Homeopathy</option>
             </select>
           </div>
           <div class="form-group">
@@ -74,18 +100,74 @@
           </div>
         </div>
 
+        <!-- Patient Vitals Assessment Section -->
+        <div style="background: var(--card-glass); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border);">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 12px;">
+            🩺 Patient Vitals Assessment
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">BP (mmHg)</label>
+              <input type="text" id="bp" class="form-control" placeholder="120/80">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">Pulse (bpm)</label>
+              <input type="text" id="pulse" class="form-control" placeholder="72">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">Weight (kg)</label>
+              <input type="text" id="weight" class="form-control" placeholder="68">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">Temp (°F)</label>
+              <input type="text" id="temperature" class="form-control" placeholder="98.6">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">SpO2 (%)</label>
+              <input type="text" id="spo2" class="form-control" placeholder="98">
+            </div>
+          </div>
+        </div>
+
+        <!-- Prakriti Tridosha Assessment -->
+        <div style="background: var(--card-glass); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid var(--border);">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 12px;">
+            ☯️ Prakriti / Dosha Proportion Assessment (%)
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">Vata %: <span id="val-vata">33%</span></label>
+              <input type="range" id="prakriti_vata" min="0" max="100" value="33" class="form-control" oninput="document.getElementById('val-vata').innerText=this.value+'%'">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">Pitta %: <span id="val-pitta">33%</span></label>
+              <input type="range" id="prakriti_pitta" min="0" max="100" value="33" class="form-control" oninput="document.getElementById('val-pitta').innerText=this.value+'%'">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="font-size: 11px;">Kapha %: <span id="val-kapha">34%</span></label>
+              <input type="range" id="prakriti_kapha" min="0" max="100" value="34" class="form-control" oninput="document.getElementById('val-kapha').innerText=this.value+'%'">
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
-          <label for="chief_complaint">Chief Complaint & Primary Symptoms *</label>
+          <label for="chief_complaint">
+            <span>Chief Complaint & Primary Symptoms *</span>
+            <button type="button" class="btn-mic-dictate" onclick="App.startVoiceDictation('chief_complaint', this)">🎤 Voice Dictate</button>
+          </label>
           <input type="text" id="chief_complaint" class="form-control" placeholder="e.g. Chronic lower back pain, digestive sluggishness for 3 months..." required>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="symptoms">Symptoms & Clinical History</label>
+            <label for="symptoms">
+              <span>Symptoms & Clinical History</span>
+              <button type="button" class="btn-mic-dictate" onclick="App.startVoiceDictation('symptoms', this)">🎤 Voice Dictate</button>
+            </label>
             <textarea id="symptoms" class="form-control" placeholder="Detailed symptom breakdown, onset, duration, aggravating factors..."></textarea>
           </div>
           <div class="form-group">
-            <label for="examination_findings">Examination Findings (Nadi/Naadi/Nabz/Pulse, Tongue, BP...)</label>
+            <label for="examination_findings">Examination Findings (Nadi/Naadi/Nabz/Pulse, Tongue, Vitals...)</label>
             <textarea id="examination_findings" class="form-control" placeholder="e.g. Pulse: Vata-Kaphaja, Tongue: Ama coated, Abdomen tender..."></textarea>
           </div>
         </div>
@@ -111,16 +193,22 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="notes">Additional Clinical Notes</label>
-          <textarea id="notes" class="form-control" placeholder="Any procedural recommendations, referrals, or lab investigations advised..." rows="2"></textarea>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="attachment_url">📎 Diagnostic Lab Report / Image URL (Optional)</label>
+            <input type="url" id="attachment_url" class="form-control" placeholder="https://example.com/xray_report.jpg">
+          </div>
+          <div class="form-group">
+            <label for="notes">Additional Clinical Notes</label>
+            <input type="text" id="notes" class="form-control" placeholder="Any procedural recommendations or referrals...">
+          </div>
         </div>
 
-        <div style="display: flex; gap: 12px; margin-top: 24px;">
-          <button type="submit" id="btn-save-case" class="btn btn-primary" style="flex: 2;">
+        <div style="display: flex; gap: 14px; margin-top: 28px;">
+          <button type="submit" id="btn-save-case" class="btn btn-primary" style="flex: 2; padding: 13px; font-size: 15px;">
             💾 Save Case Sheet
           </button>
-          <button type="button" id="btn-cancel" class="btn btn-secondary" style="flex: 1;">
+          <button type="button" id="btn-cancel" class="btn btn-secondary" style="flex: 1; padding: 13px;">
             Cancel
           </button>
         </div>
@@ -152,14 +240,12 @@
         window.location.href = `patient-history.html?aadhar=${encodeURIComponent(currentAadhar)}`;
       });
 
-      // Prefill doctor's default system
       const doctor = App.checkAuth();
       if (doctor && doctor.ayush_system) {
         const sysSelect = document.getElementById('ayush_system');
         sysSelect.value = doctor.ayush_system;
       }
 
-      // Fetch patient info
       try {
         const res = await API.patients.getDetails(currentAadhar);
         const p = res.patient;
@@ -201,7 +287,16 @@
         medicines_prescribed: document.getElementById('medicines_prescribed').value.trim(),
         dosage_instructions: document.getElementById('dosage_instructions').value.trim(),
         follow_up_date: document.getElementById('follow_up_date').value || null,
-        notes: document.getElementById('notes').value.trim()
+        notes: document.getElementById('notes').value.trim(),
+        bp: document.getElementById('bp').value.trim(),
+        pulse: document.getElementById('pulse').value.trim(),
+        weight: document.getElementById('weight').value.trim(),
+        temperature: document.getElementById('temperature').value.trim(),
+        spo2: document.getElementById('spo2').value.trim(),
+        prakriti_vata: document.getElementById('prakriti_vata').value,
+        prakriti_pitta: document.getElementById('prakriti_pitta').value,
+        prakriti_kapha: document.getElementById('prakriti_kapha').value,
+        attachment_url: document.getElementById('attachment_url').value.trim()
       };
 
       try {

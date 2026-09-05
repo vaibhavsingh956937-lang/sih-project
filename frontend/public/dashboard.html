@@ -11,50 +11,79 @@
   <!-- Top Navigation Bar -->
   <header class="top-navbar">
     <a href="dashboard.html" class="brand-container">
-      <div class="brand-logo">🌿</div>
+      <div class="brand-logo-wrapper">
+        <div class="brand-logo">🌿</div>
+      </div>
       <div>
-        <div class="brand-title">AYUSH OPD CMS</div>
-        <div class="brand-subtitle">Digital Patient Case Management</div>
+        <div class="brand-title" id="txt-brand-title">AYUSH OPD CMS</div>
+        <div class="brand-subtitle" id="txt-brand-sub">Digital Patient Case Management</div>
       </div>
     </a>
 
     <div class="nav-user-info">
-      <div class="user-badge">
-        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
-        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      <div class="nav-controls">
+        <button id="btn-toggle-lang" class="btn-icon-toggle" title="Switch Language (English / हिंदी)">
+          🌐 <span id="txt-lang-label">हिंदी</span>
+        </button>
+        <button id="btn-toggle-theme" class="btn-icon-toggle" title="Toggle Light/Dark Theme">
+          🌙 Theme
+        </button>
       </div>
-      <button id="btn-logout" class="btn-logout">Logout</button>
+
+      <div class="user-badge-card">
+        <div class="user-avatar-circle">🩺</div>
+        <div>
+          <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+          <div id="nav-user-system" class="user-system">Ayurveda</div>
+        </div>
+      </div>
+      <button id="btn-logout" class="btn-logout">
+        <span>Logout</span>
+        <span>🚪</span>
+      </button>
     </div>
   </header>
 
   <!-- Main Container -->
   <main class="container">
     <!-- Top Action Bar -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
       <div>
-        <h1 style="font-size: 22px; font-weight: 700; color: var(--primary);">Doctor OPD Dashboard</h1>
-        <p style="color: var(--text-muted); font-size: 13px;">Manage patients, review medical timelines, and issue case sheets.</p>
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--primary-deep); letter-spacing: -0.4px;" id="txt-dash-title">Doctor OPD Dashboard</h1>
+        <p style="color: var(--text-secondary); font-size: 13.5px;">Search Aadhar IDs, review patient medical timelines, and issue case sheets.</p>
       </div>
-      <a href="patient-new.html" class="btn btn-primary">
-        + Register New Patient
-      </a>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button onclick="API.patients.exportCSV()" class="btn btn-secondary" style="border-radius: var(--radius-pill); font-size: 13px;">
+          📥 Export Directory (CSV)
+        </button>
+        <a href="patient-new.html" class="btn btn-primary" style="border-radius: var(--radius-pill);" id="txt-btn-reg-patient">
+          <span style="font-size: 16px; font-weight: 800;">+</span> Register New Patient
+        </a>
+      </div>
     </div>
 
     <!-- Tabs Navigation -->
     <div class="tabs-header">
-      <button class="tab-btn active" onclick="switchTab('tab-patients', this)">🔍 Patient Search & Directory</button>
-      <button class="tab-btn" onclick="switchTab('tab-stats', this)">📊 OPD Statistics & Analytics</button>
+      <button class="tab-btn active" onclick="switchTab('tab-patients', this)">
+        <span>🔍</span> <span id="txt-tab-search">Patient Search Directory</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-schedule', this)">
+        <span>📅</span> <span id="txt-tab-schedule">Follow-up Schedule Calendar</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-stats', this)">
+        <span>📊</span> <span id="txt-tab-stats">OPD Statistics & Analytics</span>
+      </button>
     </div>
 
     <!-- Tab 1: Patient Search Directory -->
     <section id="tab-patients" class="tab-content active">
       <div class="card">
         <div class="search-box-wrapper">
-          <input type="text" id="patient-search-input" class="form-control search-input" placeholder="Search by 12-Digit Aadhar Number, Full Name, or Phone..." autocomplete="off">
+          <input type="text" id="patient-search-input" class="form-control search-input" placeholder="Search by 12-Digit Aadhar Number, Patient Name, or Phone..." autocomplete="off">
           <button id="btn-search-trigger" class="btn btn-primary">Search</button>
         </div>
 
-        <div id="search-status" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+        <div id="search-status" style="font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 14px;">
           Showing registered patients...
         </div>
 
@@ -63,6 +92,7 @@
             <thead>
               <tr>
                 <th>Aadhar Number</th>
+                <th>OPD Token</th>
                 <th>Full Name</th>
                 <th>Age / Gender</th>
                 <th>Phone</th>
@@ -72,7 +102,7 @@
             </thead>
             <tbody id="patients-table-body">
               <tr>
-                <td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted);">
+                <td colspan="7" style="text-align: center; padding: 28px; color: var(--text-muted);">
                   Loading patient records...
                 </td>
               </tr>
@@ -82,26 +112,64 @@
       </div>
     </section>
 
-    <!-- Tab 2: Quick Stats & Analytics -->
+    <!-- Tab 2: Follow-up Schedule Calendar -->
+    <section id="tab-schedule" class="tab-content">
+      <div class="card">
+        <div class="card-header-bar">
+          <div class="card-title">
+            <span>📅</span> Upcoming OPD Follow-up Appointments
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Scheduled Date</th>
+                <th>Patient Name</th>
+                <th>Aadhar ID</th>
+                <th>Contact Phone</th>
+                <th>Chief Complaint</th>
+                <th>Doctor</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-table-body">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">
+                  Loading follow-up schedule...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Quick Stats & Analytics -->
     <section id="tab-stats" class="tab-content">
       <div class="stats-grid">
-        <div class="stat-card">
+        <div class="stat-card" style="border-left-color: var(--primary);">
           <div class="stat-card-title">Total Patients</div>
           <div id="stat-total-patients" class="stat-card-value">-</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" style="border-left-color: var(--secondary);">
           <div class="stat-card-title">Total Case Visits</div>
           <div id="stat-total-cases" class="stat-card-value">-</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" style="border-left-color: var(--accent);">
           <div class="stat-card-title">Cases Today</div>
           <div id="stat-cases-today" class="stat-card-value">-</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">AYUSH System-Wise Case Distribution</div>
-        <div id="system-stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 16px;">
+        <div class="card-header-bar">
+          <div class="card-title">
+            <span>🌿</span> AYUSH System-Wise Case Distribution
+          </div>
+        </div>
+        <div id="system-stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
           <!-- Dynamically populated -->
         </div>
       </div>
@@ -125,6 +193,8 @@
 
       if (tabId === 'tab-stats') {
         loadAnalytics();
+      } else if (tabId === 'tab-schedule') {
+        loadSchedule();
       }
     }
 
@@ -139,9 +209,9 @@
         if (patients.length === 0) {
           tbody.innerHTML = `
             <tr>
-              <td colspan="6" style="text-align: center; padding: 24px;">
-                <div style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">No patient records found matching your search.</div>
-                <a href="patient-new.html" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">+ Register New Patient</a>
+              <td colspan="7" style="text-align: center; padding: 32px;">
+                <div style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px; font-weight: 600;">No patient records found matching your search.</div>
+                <a href="patient-new.html" class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">+ Register New Patient</a>
               </td>
             </tr>
           `;
@@ -150,24 +220,56 @@
 
         tbody.innerHTML = patients.map(p => `
           <tr class="clickable-row" onclick="window.location.href='patient-history.html?aadhar=${p.aadhar_number}'">
-            <td style="font-family: monospace; font-weight: 700; color: var(--primary);">
-              ${App.maskAadhar(p.aadhar_number)}
+            <td>
+              <span class="aadhar-code">${App.maskAadhar(p.aadhar_number)}</span>
             </td>
-            <td style="font-weight: 600;">${p.full_name}</td>
+            <td>
+              <span class="token-badge">${p.opd_token || 'OPD-2026'}</span>
+            </td>
+            <td style="font-weight: 700; color: var(--primary-deep);">${p.full_name}</td>
             <td>${p.age !== null ? p.age + ' yrs' : 'N/A'} / ${p.gender || 'N/A'}</td>
             <td>${p.phone || 'N/A'}</td>
-            <td style="color: var(--text-muted); font-size: 13px;">
+            <td style="color: var(--text-secondary); font-size: 13px;">
               ${p.last_visit ? App.formatDate(p.last_visit) : 'No visits recorded'}
             </td>
             <td>
-              <a href="patient-history.html?aadhar=${p.aadhar_number}" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="event.stopPropagation();">
-                View History
+              <a href="patient-history.html?aadhar=${p.aadhar_number}" class="btn btn-secondary" style="padding: 5px 12px; font-size: 12px; border-radius: var(--radius-pill);" onclick="event.stopPropagation();">
+                View History →
               </a>
             </td>
           </tr>
         `).join('');
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="6" style="color: var(--error); text-align: center;">Error loading patients: ${err.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="color: var(--error); text-align: center;">Error loading patients: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function loadSchedule() {
+      const tbody = document.getElementById('schedule-table-body');
+      try {
+        const list = await API.patients.getSchedule();
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">No upcoming follow-up appointments scheduled.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = list.map(item => `
+          <tr class="clickable-row" onclick="window.location.href='patient-history.html?aadhar=${item.patient_aadhar}'">
+            <td style="font-weight: 800; color: var(--primary);">${App.formatDate(item.follow_up_date)}</td>
+            <td style="font-weight: 700;">${item.patient_name}</td>
+            <td><span class="aadhar-code">${App.maskAadhar(item.patient_aadhar)}</span></td>
+            <td>${item.patient_phone || 'N/A'}</td>
+            <td>${item.chief_complaint}</td>
+            <td>${item.doctor_name || 'Dr. AYUSH'}</td>
+            <td>
+              <a href="patient-history.html?aadhar=${item.patient_aadhar}" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px; border-radius: var(--radius-pill);">
+                Open Chart
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="color: var(--error); text-align: center;">Error loading schedule: ${err.message}</td></tr>`;
       }
     }
 
@@ -183,10 +285,10 @@
 
         const systems = ['Ayurveda', 'Yoga & Naturopathy', 'Unani', 'Siddha', 'Homeopathy'];
         sysContainer.innerHTML = systems.map(sys => `
-          <div style="background: var(--bg); padding: 14px; border-radius: var(--radius-btn); border: 1px solid var(--border);">
-            <div style="margin-bottom: 6px;">${App.getSystemBadgeHTML(sys)}</div>
-            <div style="font-size: 22px; font-weight: 800; color: var(--text-dark);">${sysCount[sys] || 0}</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Total Case sheets</div>
+          <div style="background: var(--card-bg); padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+            <div style="margin-bottom: 10px;">${App.getSystemBadgeHTML(sys)}</div>
+            <div style="font-size: 26px; font-weight: 800; color: var(--primary-deep);">${sysCount[sys] || 0}</div>
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px;">Recorded Visits</div>
           </div>
         `).join('');
       } catch (err) {
@@ -194,7 +296,6 @@
       }
     }
 
-    // Real-time search debounce
     document.getElementById('patient-search-input').addEventListener('input', (e) => {
       clearTimeout(searchTimeout);
       const query = e.target.value;
@@ -208,7 +309,6 @@
       loadPatients(query);
     });
 
-    // Initial load
     document.addEventListener('DOMContentLoaded', () => {
       loadPatients();
     });

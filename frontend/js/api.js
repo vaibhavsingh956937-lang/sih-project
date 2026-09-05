@@ -1,5 +1,4 @@
 const API = (() => {
-  // Determine Base URL dynamically
   const BASE_URL = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
     ? 'http://localhost:3000/api'
     : '/api';
@@ -27,7 +26,6 @@ const API = (() => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        // Clear expired auth state & redirect if unauthorized
         localStorage.removeItem('ayush_token');
         localStorage.removeItem('ayush_doctor');
         if (!window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('register.html') && window.location.pathname !== '/') {
@@ -92,6 +90,16 @@ const API = (() => {
           headers: getHeaders(true)
         });
         return handleResponse(res);
+      },
+      getSchedule: async () => {
+        const res = await fetch(`${BASE_URL}/patients/schedule/followups`, {
+          headers: getHeaders(true)
+        });
+        return handleResponse(res);
+      },
+      exportCSV: async () => {
+        const token = localStorage.getItem('ayush_token');
+        window.open(`${BASE_URL}/patients/export/csv?token=${encodeURIComponent(token)}`, '_blank');
       }
     },
     cases: {
