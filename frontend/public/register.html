@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Registration - AYUSH OPD System</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <div class="container auth-wrapper">
+    <div class="auth-header">
+      <div class="brand-logo" style="margin: 0 auto 12px; width: 48px; height: 48px; font-size: 22px;">🩺</div>
+      <h1>Doctor Registration</h1>
+      <p>Join the AYUSH Integrated OPD Network</p>
+    </div>
+
+    <div class="card">
+      <div id="alert-container"></div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label for="name">Full Name (Doctor)</label>
+          <input type="text" id="name" class="form-control" placeholder="Dr. Firstname Lastname" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Official Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="doctor@ayush.gov.in" required>
+        </div>
+
+        <div class="form-group">
+          <label for="ayush_system">Primary AYUSH System</label>
+          <select id="ayush_system" class="form-control" required>
+            <option value="Ayurveda" selected>Ayurveda</option>
+            <option value="Yoga & Naturopathy">Yoga & Naturopathy</option>
+            <option value="Unani">Unani</option>
+            <option value="Siddha">Siddha</option>
+            <option value="Homeopathy">Homeopathy</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password (min 6 chars)</label>
+            <input type="password" id="password" class="form-control" placeholder="••••••••" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" class="form-control" placeholder="••••••••" minlength="6" required>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-register" class="btn btn-primary btn-block" style="margin-top: 10px;">
+          Create Doctor Account
+        </button>
+      </form>
+
+      <div style="margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-muted);">
+        Already have an account? <a href="index.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    AYUSH OPD Patient Case Management System &copy; 2026. Self-Hosted & Secure.
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const ayush_system = document.getElementById('ayush_system').value;
+      const password = document.getElementById('password').value;
+      const confirm_password = document.getElementById('confirm_password').value;
+      const btn = document.getElementById('btn-register');
+      const alertContainer = document.getElementById('alert-container');
+
+      alertContainer.innerHTML = '';
+
+      if (password !== confirm_password) {
+        alertContainer.innerHTML = '<div class="alert alert-error">Passwords do not match. Please re-enter.</div>';
+        return;
+      }
+
+      if (password.length < 6) {
+        alertContainer.innerHTML = '<div class="alert alert-error">Password must be at least 6 characters.</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Creating Account...';
+
+      try {
+        const res = await API.auth.register({ name, email, password, ayush_system });
+        localStorage.setItem('ayush_token', res.token);
+        localStorage.setItem('ayush_doctor', JSON.stringify(res.doctor));
+        App.showToast('Account created successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 500);
+      } catch (err) {
+        alertContainer.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+        btn.disabled = false;
+        btn.innerText = 'Create Doctor Account';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OPD Dashboard - AYUSH Case Management System</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <a href="dashboard.html" class="brand-container">
+      <div class="brand-logo">🌿</div>
+      <div>
+        <div class="brand-title">AYUSH OPD CMS</div>
+        <div class="brand-subtitle">Digital Patient Case Management</div>
+      </div>
+    </a>
+
+    <div class="nav-user-info">
+      <div class="user-badge">
+        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      </div>
+      <button id="btn-logout" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <!-- Top Action Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h1 style="font-size: 22px; font-weight: 700; color: var(--primary);">Doctor OPD Dashboard</h1>
+        <p style="color: var(--text-muted); font-size: 13px;">Manage patients, review medical timelines, and issue case sheets.</p>
+      </div>
+      <a href="patient-new.html" class="btn btn-primary">
+        + Register New Patient
+      </a>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-header">
+      <button class="tab-btn active" onclick="switchTab('tab-patients', this)">🔍 Patient Search & Directory</button>
+      <button class="tab-btn" onclick="switchTab('tab-stats', this)">📊 OPD Statistics & Analytics</button>
+    </div>
+
+    <!-- Tab 1: Patient Search Directory -->
+    <section id="tab-patients" class="tab-content active">
+      <div class="card">
+        <div class="search-box-wrapper">
+          <input type="text" id="patient-search-input" class="form-control search-input" placeholder="Search by 12-Digit Aadhar Number, Full Name, or Phone..." autocomplete="off">
+          <button id="btn-search-trigger" class="btn btn-primary">Search</button>
+        </div>
+
+        <div id="search-status" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+          Showing registered patients...
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Aadhar Number</th>
+                <th>Full Name</th>
+                <th>Age / Gender</th>
+                <th>Phone</th>
+                <th>Last Visit</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="patients-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted);">
+                  Loading patient records...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Quick Stats & Analytics -->
+    <section id="tab-stats" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-title">Total Patients</div>
+          <div id="stat-total-patients" class="stat-card-value">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Total Case Visits</div>
+          <div id="stat-total-cases" class="stat-card-value">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Cases Today</div>
+          <div id="stat-cases-today" class="stat-card-value">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">AYUSH System-Wise Case Distribution</div>
+        <div id="system-stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 16px;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    AYUSH OPD Patient Case Management System &copy; 2026. Self-Hosted & Secure.
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let searchTimeout = null;
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+
+      if (tabId === 'tab-stats') {
+        loadAnalytics();
+      }
+    }
+
+    async function loadPatients(query = '') {
+      const tbody = document.getElementById('patients-table-body');
+      const status = document.getElementById('search-status');
+
+      try {
+        const patients = await API.patients.search(query);
+        status.innerText = query ? `Found ${patients.length} patient(s) matching "${query}"` : `Showing all registered patients (${patients.length})`;
+
+        if (patients.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 24px;">
+                <div style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">No patient records found matching your search.</div>
+                <a href="patient-new.html" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">+ Register New Patient</a>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = patients.map(p => `
+          <tr class="clickable-row" onclick="window.location.href='patient-history.html?aadhar=${p.aadhar_number}'">
+            <td style="font-family: monospace; font-weight: 700; color: var(--primary);">
+              ${App.maskAadhar(p.aadhar_number)}
+            </td>
+            <td style="font-weight: 600;">${p.full_name}</td>
+            <td>${p.age !== null ? p.age + ' yrs' : 'N/A'} / ${p.gender || 'N/A'}</td>
+            <td>${p.phone || 'N/A'}</td>
+            <td style="color: var(--text-muted); font-size: 13px;">
+              ${p.last_visit ? App.formatDate(p.last_visit) : 'No visits recorded'}
+            </td>
+            <td>
+              <a href="patient-history.html?aadhar=${p.aadhar_number}" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="event.stopPropagation();">
+                View History
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color: var(--error); text-align: center;">Error loading patients: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function loadAnalytics() {
+      try {
+        const data = await API.analytics.getDashboard();
+        document.getElementById('stat-total-patients').innerText = data.total_patients || 0;
+        document.getElementById('stat-total-cases').innerText = data.total_cases || 0;
+        document.getElementById('stat-cases-today').innerText = data.cases_today || 0;
+
+        const sysContainer = document.getElementById('system-stats-container');
+        const sysCount = data.system_wise_count || {};
+
+        const systems = ['Ayurveda', 'Yoga & Naturopathy', 'Unani', 'Siddha', 'Homeopathy'];
+        sysContainer.innerHTML = systems.map(sys => `
+          <div style="background: var(--bg); padding: 14px; border-radius: var(--radius-btn); border: 1px solid var(--border);">
+            <div style="margin-bottom: 6px;">${App.getSystemBadgeHTML(sys)}</div>
+            <div style="font-size: 22px; font-weight: 800; color: var(--text-dark);">${sysCount[sys] || 0}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Total Case sheets</div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Analytics load error:', err);
+      }
+    }
+
+    // Real-time search debounce
+    document.getElementById('patient-search-input').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      const query = e.target.value;
+      searchTimeout = setTimeout(() => {
+        loadPatients(query);
+      }, 250);
+    });
+
+    document.getElementById('btn-search-trigger').addEventListener('click', () => {
+      const query = document.getElementById('patient-search-input').value;
+      loadPatients(query);
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPatients();
+    });
+  </script>
+</body>
+</html>

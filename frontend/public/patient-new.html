@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Patient Registration - AYUSH OPD System</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <a href="dashboard.html" class="brand-container">
+      <div class="brand-logo">🌿</div>
+      <div>
+        <div class="brand-title">AYUSH OPD CMS</div>
+        <div class="brand-subtitle">Digital Patient Case Management</div>
+      </div>
+    </a>
+
+    <div class="nav-user-info">
+      <div class="user-badge">
+        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      </div>
+      <button id="btn-logout" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="margin-bottom: 20px;">
+      <a href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 13px;">← Back to Dashboard</a>
+      <h1 style="font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 6px;">Register New Patient</h1>
+      <p style="color: var(--text-muted); font-size: 13px;">Enter patient demographic details using 12-digit Aadhar as primary identifier.</p>
+    </div>
+
+    <div class="card">
+      <div id="alert-container"></div>
+
+      <form id="patient-reg-form">
+        <!-- Primary Identification section -->
+        <div style="background: var(--accent-light); padding: 16px; border-radius: var(--radius-btn); margin-bottom: 20px; border: 1px solid rgba(0,168,150,0.2);">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="aadhar_number" style="color: var(--primary-dark); font-weight: 700;">
+                Aadhar Number (12 Digits - Primary Identifier) *
+              </label>
+              <input type="text" id="aadhar_number" class="form-control" placeholder="e.g. 123456789012" maxlength="12" pattern="\d{12}" style="font-family: monospace; font-size: 16px; font-weight: 700; letter-spacing: 1px;" required>
+              <small style="color: var(--text-muted); font-size: 11px;">Must be exactly 12 numeric digits without spaces or dashes.</small>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="full_name" style="color: var(--primary-dark); font-weight: 700;">
+                Patient Full Name *
+              </label>
+              <input type="text" id="full_name" class="form-control" placeholder="e.g. Rajesh Kumar" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="date_of_birth">Date of Birth</label>
+            <input type="date" id="date_of_birth" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" class="form-control">
+              <option value="Male" selected>Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number (10 Digits)</label>
+            <input type="tel" id="phone" class="form-control" placeholder="9876543210" maxlength="10" pattern="\d{10}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Residential Address</label>
+          <textarea id="address" class="form-control" placeholder="House No, Street, Landmark..." rows="2"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="village">Village / Town</label>
+            <input type="text" id="village" class="form-control" placeholder="e.g. Rampur">
+          </div>
+          <div class="form-group">
+            <label for="district">District</label>
+            <input type="text" id="district" class="form-control" placeholder="e.g. Varanasi">
+          </div>
+          <div class="form-group">
+            <label for="state">State</label>
+            <select id="state" class="form-control">
+              <option value="Uttar Pradesh" selected>Uttar Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Other">Other State</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 24px;">
+          <button type="submit" id="btn-save-patient" class="btn btn-primary" style="flex: 2;">
+            Register & Start Case Sheet →
+          </button>
+          <a href="dashboard.html" class="btn btn-secondary" style="flex: 1;">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    AYUSH OPD Patient Case Management System &copy; 2026. Self-Hosted & Secure.
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    document.getElementById('patient-reg-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const aadhar_number = document.getElementById('aadhar_number').value.trim();
+      const full_name = document.getElementById('full_name').value.trim();
+      const date_of_birth = document.getElementById('date_of_birth').value;
+      const gender = document.getElementById('gender').value;
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const village = document.getElementById('village').value.trim();
+      const district = document.getElementById('district').value.trim();
+      const state = document.getElementById('state').value;
+      const btn = document.getElementById('btn-save-patient');
+      const alertContainer = document.getElementById('alert-container');
+
+      alertContainer.innerHTML = '';
+
+      if (!/^\d{12}$/.test(aadhar_number)) {
+        alertContainer.innerHTML = '<div class="alert alert-error">Aadhar Number must be exactly 12 numeric digits.</div>';
+        return;
+      }
+
+      if (phone && !/^\d{10}$/.test(phone)) {
+        alertContainer.innerHTML = '<div class="alert alert-error">Phone number must be exactly 10 numeric digits.</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Registering Patient...';
+
+      try {
+        const res = await API.patients.register({
+          aadhar_number,
+          full_name,
+          date_of_birth,
+          gender,
+          phone,
+          address,
+          village,
+          district,
+          state
+        });
+
+        App.showToast('Patient registered successfully!', 'success');
+        setTimeout(() => {
+          // Immediately redirect doctor to start new case sheet for this patient
+          window.location.href = `case-new.html?aadhar=${encodeURIComponent(aadhar_number)}`;
+        }, 500);
+      } catch (err) {
+        alertContainer.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+        btn.disabled = false;
+        btn.innerText = 'Register & Start Case Sheet →';
+      }
+    });
+  </script>
+</body>
+</html>

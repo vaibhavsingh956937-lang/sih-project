@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Case Sheet - AYUSH OPD System</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <a href="dashboard.html" class="brand-container">
+      <div class="brand-logo">🌿</div>
+      <div>
+        <div class="brand-title">AYUSH OPD CMS</div>
+        <div class="brand-subtitle">Digital Patient Case Management</div>
+      </div>
+    </a>
+
+    <div class="nav-user-info">
+      <div class="user-badge">
+        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      </div>
+      <button id="btn-logout" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="margin-bottom: 20px;">
+      <a id="back-link" href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 13px;">← Back</a>
+      <h1 style="font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 6px;">Create New AYUSH Case Sheet</h1>
+      <p style="color: var(--text-muted); font-size: 13px;">Record diagnostic findings, treatment plans, and prescriptions for the current visit.</p>
+    </div>
+
+    <!-- Patient Header Card -->
+    <div class="card" style="background: var(--accent-light); border-color: rgba(0,168,150,0.3); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary-dark);">Patient Demographics</span>
+          <h2 id="patient-name" style="font-size: 20px; font-weight: 700; color: var(--primary);">Loading...</h2>
+          <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+            <span id="patient-gender-age">Age / Gender: -</span> | 
+            <span id="patient-phone">Phone: -</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary-dark);">Aadhar Identifier</span>
+          <div id="patient-aadhar-masked" style="font-family: monospace; font-size: 18px; font-weight: 800; color: var(--primary);">XXXX-XXXX-XXXX</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case Sheet Entry Form -->
+    <div class="card">
+      <div id="alert-container"></div>
+
+      <form id="case-sheet-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ayush_system">AYUSH System for this Visit *</label>
+            <select id="ayush_system" class="form-control" required>
+              <option value="Ayurveda">Ayurveda</option>
+              <option value="Yoga & Naturopathy">Yoga & Naturopathy</option>
+              <option value="Unani">Unani</option>
+              <option value="Siddha">Siddha</option>
+              <option value="Homeopathy">Homeopathy</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="follow_up_date">Follow-up Date (Optional)</label>
+            <input type="date" id="follow_up_date" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="chief_complaint">Chief Complaint & Primary Symptoms *</label>
+          <input type="text" id="chief_complaint" class="form-control" placeholder="e.g. Chronic lower back pain, digestive sluggishness for 3 months..." required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="symptoms">Symptoms & Clinical History</label>
+            <textarea id="symptoms" class="form-control" placeholder="Detailed symptom breakdown, onset, duration, aggravating factors..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="examination_findings">Examination Findings (Nadi/Naadi/Nabz/Pulse, Tongue, BP...)</label>
+            <textarea id="examination_findings" class="form-control" placeholder="e.g. Pulse: Vata-Kaphaja, Tongue: Ama coated, Abdomen tender..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="diagnosis">Diagnosis (AYUSH & Clinical)</label>
+          <textarea id="diagnosis" class="form-control" placeholder="e.g. Kativata (Lumbago) with Agnimandya..." rows="2"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="treatment_plan">Treatment Plan & Procedures (Chikitsa Sutra / Therapies)</label>
+          <textarea id="treatment_plan" class="form-control" placeholder="e.g. Deepana-Pachana therapy, Kati Basti oil pooling, Hydrotherapy..." rows="2"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="medicines_prescribed">Medicines & Formulations Prescribed</label>
+            <textarea id="medicines_prescribed" class="form-control" placeholder="1. Yograj Guggulu - 2 tabs twice daily&#10;2. Dashmoolarishta - 20ml after meals" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="dosage_instructions">Dosage Instructions & Dietary Pathya-Apathya</label>
+            <textarea id="dosage_instructions" class="form-control" placeholder="Take after food with warm water. Avoid cold & raw foods, curd..." rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Additional Clinical Notes</label>
+          <textarea id="notes" class="form-control" placeholder="Any procedural recommendations, referrals, or lab investigations advised..." rows="2"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 24px;">
+          <button type="submit" id="btn-save-case" class="btn btn-primary" style="flex: 2;">
+            💾 Save Case Sheet
+          </button>
+          <button type="button" id="btn-cancel" class="btn btn-secondary" style="flex: 1;">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    AYUSH OPD Patient Case Management System &copy; 2026. Self-Hosted & Secure.
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let currentAadhar = null;
+
+    async function initPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      currentAadhar = urlParams.get('aadhar');
+
+      if (!currentAadhar) {
+        App.showToast('No patient Aadhar number specified.', 'error');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+        return;
+      }
+
+      document.getElementById('back-link').href = `patient-history.html?aadhar=${encodeURIComponent(currentAadhar)}`;
+      document.getElementById('btn-cancel').addEventListener('click', () => {
+        window.location.href = `patient-history.html?aadhar=${encodeURIComponent(currentAadhar)}`;
+      });
+
+      // Prefill doctor's default system
+      const doctor = App.checkAuth();
+      if (doctor && doctor.ayush_system) {
+        const sysSelect = document.getElementById('ayush_system');
+        sysSelect.value = doctor.ayush_system;
+      }
+
+      // Fetch patient info
+      try {
+        const res = await API.patients.getDetails(currentAadhar);
+        const p = res.patient;
+        document.getElementById('patient-name').innerText = p.full_name;
+        document.getElementById('patient-aadhar-masked').innerText = App.maskAadhar(p.aadhar_number);
+        document.getElementById('patient-gender-age').innerText = `Age: ${p.age !== null ? p.age + ' yrs' : 'N/A'} | Gender: ${p.gender || 'N/A'}`;
+        document.getElementById('patient-phone').innerText = `Phone: ${p.phone || 'N/A'}`;
+      } catch (err) {
+        document.getElementById('alert-container').innerHTML = `<div class="alert alert-error">Failed to load patient profile: ${err.message}</div>`;
+      }
+    }
+
+    document.getElementById('case-sheet-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const chief_complaint = document.getElementById('chief_complaint').value.trim();
+      const diagnosis = document.getElementById('diagnosis').value.trim();
+      const treatment_plan = document.getElementById('treatment_plan').value.trim();
+      const alertContainer = document.getElementById('alert-container');
+      const btn = document.getElementById('btn-save-case');
+
+      alertContainer.innerHTML = '';
+
+      if (!diagnosis && !treatment_plan) {
+        alertContainer.innerHTML = '<div class="alert alert-error">Please fill at least Diagnosis or Treatment Plan.</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Saving Case Sheet...';
+
+      const payload = {
+        patient_aadhar: currentAadhar,
+        ayush_system: document.getElementById('ayush_system').value,
+        chief_complaint,
+        symptoms: document.getElementById('symptoms').value.trim(),
+        examination_findings: document.getElementById('examination_findings').value.trim(),
+        diagnosis,
+        treatment_plan,
+        medicines_prescribed: document.getElementById('medicines_prescribed').value.trim(),
+        dosage_instructions: document.getElementById('dosage_instructions').value.trim(),
+        follow_up_date: document.getElementById('follow_up_date').value || null,
+        notes: document.getElementById('notes').value.trim()
+      };
+
+      try {
+        await API.cases.create(payload);
+        App.showToast('Case sheet saved successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `patient-history.html?aadhar=${encodeURIComponent(currentAadhar)}`;
+        }, 500);
+      } catch (err) {
+        alertContainer.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+        btn.disabled = false;
+        btn.innerText = '💾 Save Case Sheet';
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

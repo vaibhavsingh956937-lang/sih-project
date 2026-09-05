@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - AYUSH OPD Patient Case System</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <div class="container auth-wrapper">
+    <div class="auth-header">
+      <div class="brand-logo" style="margin: 0 auto 12px; width: 48px; height: 48px; font-size: 22px;">🌿</div>
+      <h1>AYUSH Patient Case System</h1>
+      <p>Digitising AYUSH OPDs for Seamless Continuity of Care</p>
+    </div>
+
+    <div class="card">
+      <div id="alert-container"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Doctor Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="doctor@ayush.gov.in" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="btn-login" class="btn btn-primary btn-block">
+          Login to OPD Dashboard
+        </button>
+      </form>
+
+      <div style="margin-top: 20px; text-align: center; font-size: 13px; color: var(--text-muted);">
+        Don't have a doctor account? <a href="register.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Create Account</a>
+      </div>
+    </div>
+
+    <!-- Quick Demo Login Credentials Card -->
+    <div class="card" style="background: var(--accent-light); border-color: rgba(0,168,150,0.3); padding: 16px;">
+      <div style="font-weight: 700; font-size: 13px; color: var(--primary); margin-bottom: 8px;">🔑 Quick Demo Accounts:</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" class="btn btn-secondary" style="padding: 6px 10px; font-size: 12px;" onclick="fillDemo('doctor1@ayush.gov.in', 'doctor1234')">
+          Dr. Asha (Ayurveda)
+        </button>
+        <button type="button" class="btn btn-secondary" style="padding: 6px 10px; font-size: 12px;" onclick="fillDemo('doctor2@ayush.gov.in', 'doctor1234')">
+          Dr. Raj (Yoga)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    AYUSH OPD Patient Case Management System &copy; 2026. Self-Hosted & Secure.
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    function fillDemo(email, pass) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = pass;
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('btn-login');
+      const alertContainer = document.getElementById('alert-container');
+
+      alertContainer.innerHTML = '';
+      btn.disabled = true;
+      btn.innerText = 'Authenticating...';
+
+      try {
+        const res = await API.auth.login({ email, password });
+        localStorage.setItem('ayush_token', res.token);
+        localStorage.setItem('ayush_doctor', JSON.stringify(res.doctor));
+        App.showToast('Login successful! Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 400);
+      } catch (err) {
+        alertContainer.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+        btn.disabled = false;
+        btn.innerText = 'Login to OPD Dashboard';
+      }
+    });
+
+    // Check if session expired
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('session') === 'expired') {
+      document.getElementById('alert-container').innerHTML = '<div class="alert alert-error">Your session expired. Please log in again.</div>';
+    }
+  </script>
+</body>
+</html>

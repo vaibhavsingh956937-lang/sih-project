@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Timeline & Case History - AYUSH OPD System</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <a href="dashboard.html" class="brand-container">
+      <div class="brand-logo">🌿</div>
+      <div>
+        <div class="brand-title">AYUSH OPD CMS</div>
+        <div class="brand-subtitle">Digital Patient Case Management</div>
+      </div>
+    </a>
+
+    <div class="nav-user-info">
+      <div class="user-badge">
+        <div id="nav-user-name" class="user-name">Loading Doctor...</div>
+        <span id="nav-user-system" class="user-system">Ayurveda</span>
+      </div>
+      <button id="btn-logout" class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <a href="dashboard.html" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 13px;">← Back to Directory</a>
+        <h1 style="font-size: 22px; font-weight: 700; color: var(--primary); margin-top: 4px;">Patient Medical Profile & History</h1>
+        <p style="color: var(--text-muted); font-size: 13px;">Continuity of Care across AYUSH Specialties.</p>
+      </div>
+
+      <a id="btn-add-case" href="#" class="btn btn-primary">
+        + Add New Case Sheet
+      </a>
+    </div>
+
+    <!-- Patient Demographics Profile Card -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div style="flex: 1; min-width: 250px;">
+          <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 2px;">Registered Patient</div>
+          <h2 id="patient-name" style="font-size: 24px; font-weight: 800; color: var(--primary);">Loading Patient...</h2>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px;">
+            <div>
+              <span style="color: var(--text-muted); font-size: 12px; display: block;">Age / Gender</span>
+              <strong id="patient-age-gender" style="font-size: 14px; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); font-size: 12px; display: block;">Phone Number</span>
+              <strong id="patient-phone" style="font-size: 14px; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); font-size: 12px; display: block;">Village / District</span>
+              <strong id="patient-location" style="font-size: 14px; color: var(--text-dark);">-</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); font-size: 12px; display: block;">State</span>
+              <strong id="patient-state" style="font-size: 14px; color: var(--text-dark);">-</strong>
+            </div>
+          </div>
+
+          <div id="patient-address" style="margin-top: 12px; font-size: 13px; color: var(--text-muted);">
+            Address: -
+          </div>
+        </div>
+
+        <div style="background: var(--accent-light); padding: 16px; border-radius: var(--radius-btn); border: 1px solid rgba(0,168,150,0.3); text-align: center; min-width: 220px;">
+          <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary-dark);">Aadhar Identifier (Primary)</div>
+          <div id="patient-aadhar-masked" style="font-family: monospace; font-size: 20px; font-weight: 800; color: var(--primary); margin: 6px 0;">XXXX-XXXX-XXXX</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Unique 12-digit Medical ID</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Title -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 32px; margin-bottom: 12px;">
+      <h2 style="font-size: 18px; font-weight: 700; color: var(--primary);">Case History Timeline</h2>
+      <span id="case-count-badge" class="badge-system badge-ayurveda">0 Visits Recorded</span>
+    </div>
+
+    <!-- Timeline Container -->
+    <div id="timeline-container" class="timeline">
+      <div style="padding: 24px; text-align: center; color: var(--text-muted);">Loading case sheet history...</div>
+    </div>
+  </main>
+
+  <!-- Modal for Full Case Sheet View -->
+  <div id="case-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9990; align-items: center; justify-content: center; padding: 16px;">
+    <div class="card" style="max-width: 750px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative;">
+      <button onclick="closeModal()" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      
+      <div id="modal-content">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    AYUSH OPD Patient Case Management System &copy; 2026. Self-Hosted & Secure.
+  </footer>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let currentAadhar = null;
+    let casesCache = [];
+
+    async function loadPatientHistory() {
+      const urlParams = new URLSearchParams(window.location.search);
+      currentAadhar = urlParams.get('aadhar');
+
+      if (!currentAadhar) {
+        App.showToast('Invalid Aadhar number parameter.', 'error');
+        setTimeout(() => window.location.href = 'dashboard.html', 1000);
+        return;
+      }
+
+      document.getElementById('btn-add-case').href = `case-new.html?aadhar=${encodeURIComponent(currentAadhar)}`;
+
+      try {
+        const res = await API.patients.getDetails(currentAadhar);
+        const p = res.patient;
+        casesCache = res.cases || [];
+
+        // Fill Demographics
+        document.getElementById('patient-name').innerText = p.full_name;
+        document.getElementById('patient-age-gender').innerText = `${p.age !== null ? p.age + ' yrs' : 'N/A'} / ${p.gender || 'N/A'}`;
+        document.getElementById('patient-phone').innerText = p.phone || 'N/A';
+        document.getElementById('patient-location').innerText = `${p.village || 'N/A'}, ${p.district || 'N/A'}`;
+        document.getElementById('patient-state').innerText = p.state || 'N/A';
+        document.getElementById('patient-address').innerText = `Address: ${p.address || 'Not specified'}`;
+        document.getElementById('patient-aadhar-masked').innerText = App.maskAadhar(p.aadhar_number);
+        document.getElementById('case-count-badge').innerText = `${casesCache.length} Visit(s) Recorded`;
+
+        renderTimeline(casesCache);
+      } catch (err) {
+        document.getElementById('timeline-container').innerHTML = `
+          <div class="alert alert-error">Failed to load patient timeline: ${err.message}</div>
+        `;
+      }
+    }
+
+    function renderTimeline(cases) {
+      const container = document.getElementById('timeline-container');
+
+      if (cases.length === 0) {
+        container.innerHTML = `
+          <div class="case-card" style="text-align: center; padding: 32px;">
+            <div style="font-size: 15px; color: var(--text-muted); margin-bottom: 12px;">No past case sheets recorded for this patient yet.</div>
+            <a href="case-new.html?aadhar=${encodeURIComponent(currentAadhar)}" class="btn btn-primary">
+              + Create First Case Sheet
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = cases.map((c, index) => `
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="case-card">
+            <div class="case-header">
+              <div>
+                <span class="case-date">📅 Visit: ${App.formatDateTime(c.visit_date)}</span>
+                <span style="margin-left: 8px;">${App.getSystemBadgeHTML(c.ayush_system)}</span>
+              </div>
+              <div class="case-doctor">👨‍⚕️ Attending: <strong>${c.doctor_name || 'Dr. AYUSH'}</strong></div>
+            </div>
+
+            <div class="case-section">
+              <div class="case-section-title">Chief Complaint</div>
+              <div class="case-section-content" style="font-weight: 600; color: var(--primary-dark);">${c.chief_complaint}</div>
+            </div>
+
+            ${c.diagnosis ? `
+              <div class="case-section">
+                <div class="case-section-title">Diagnosis</div>
+                <div class="case-section-content">${c.diagnosis}</div>
+              </div>
+            ` : ''}
+
+            ${c.medicines_prescribed ? `
+              <div class="case-section">
+                <div class="case-section-title">Medicines Prescribed</div>
+                <div class="case-section-content" style="background: var(--bg); padding: 8px 12px; border-radius: var(--radius-btn); border: 1px dashed var(--border); font-family: inherit;">${c.medicines_prescribed}</div>
+              </div>
+            ` : ''}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; flex-wrap: wrap; gap: 8px;">
+              <div style="font-size: 12px; color: var(--text-muted);">
+                ${c.follow_up_date ? `⏰ <strong>Follow-up Scheduled:</strong> ${App.formatDate(c.follow_up_date)}` : 'No follow-up date scheduled'}
+              </div>
+              <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="viewFullCase(${index})">
+                👁️ View Full Details
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewFullCase(index) {
+      const c = casesCache[index];
+      if (!c) return;
+
+      const modalContent = document.getElementById('modal-content');
+      modalContent.innerHTML = `
+        <div class="card-title">
+          <span>Case Sheet Details #${c.id}</span>
+          ${App.getSystemBadgeHTML(c.ayush_system)}
+        </div>
+
+        <div style="display: flex; gap: 16px; background: var(--bg); padding: 12px; border-radius: var(--radius-btn); margin-bottom: 16px; font-size: 13px;">
+          <div><strong>Visit Date:</strong> ${App.formatDateTime(c.visit_date)}</div>
+          <div><strong>Doctor:</strong> ${c.doctor_name || 'Dr. AYUSH'}</div>
+        </div>
+
+        <div class="case-section">
+          <div class="case-section-title">Chief Complaint & Primary Symptoms</div>
+          <div class="case-section-content" style="font-weight: 600;">${c.chief_complaint}</div>
+        </div>
+
+        ${c.symptoms ? `
+          <div class="case-section">
+            <div class="case-section-title">Detailed Symptoms</div>
+            <div class="case-section-content">${c.symptoms}</div>
+          </div>
+        ` : ''}
+
+        ${c.examination_findings ? `
+          <div class="case-section">
+            <div class="case-section-title">Examination Findings (Pulse / Nadi / Tongue / Vitals)</div>
+            <div class="case-section-content">${c.examination_findings}</div>
+          </div>
+        ` : ''}
+
+        ${c.diagnosis ? `
+          <div class="case-section">
+            <div class="case-section-title">Clinical & AYUSH Diagnosis</div>
+            <div class="case-section-content">${c.diagnosis}</div>
+          </div>
+        ` : ''}
+
+        ${c.treatment_plan ? `
+          <div class="case-section">
+            <div class="case-section-title">Treatment Plan & Chikitsa Sutra</div>
+            <div class="case-section-content">${c.treatment_plan}</div>
+          </div>
+        ` : ''}
+
+        ${c.medicines_prescribed ? `
+          <div class="case-section">
+            <div class="case-section-title">Medicines Prescribed</div>
+            <div class="case-section-content" style="background: var(--accent-light); padding: 10px; border-radius: var(--radius-btn);">${c.medicines_prescribed}</div>
+          </div>
+        ` : ''}
+
+        ${c.dosage_instructions ? `
+          <div class="case-section">
+            <div class="case-section-title">Dosage Instructions & Pathya/Apathya Diet</div>
+            <div class="case-section-content">${c.dosage_instructions}</div>
+          </div>
+        ` : ''}
+
+        ${c.notes ? `
+          <div class="case-section">
+            <div class="case-section-title">Additional Clinical Notes</div>
+            <div class="case-section-content">${c.notes}</div>
+          </div>
+        ` : ''}
+
+        <div style="margin-top: 20px; text-align: right;">
+          <button class="btn btn-secondary" onclick="closeModal()">Close Details</button>
+        </div>
+      `;
+
+      document.getElementById('case-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('case-modal').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadPatientHistory);
+  </script>
+</body>
+</html>

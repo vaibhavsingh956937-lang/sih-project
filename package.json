@@ -1,0 +1,24 @@
+{
+  "name": "ayush-case-system",
+  "version": "1.0.0",
+  "description": "Full AYUSH Patient Case-Taking System (Aadhar-Based Patient ID)",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "seed": "cd backend && npm run seed"
+  },
+  "keywords": [
+    "ayush",
+    "opd",
+    "cms",
+    "healthcare",
+    "ayurveda",
+    "yoga",
+    "unani",
+    "siddha",
+    "homeopathy"
+  ],
+  "author": "AYUSH Tech Team",
+  "license": "MIT"
+}
