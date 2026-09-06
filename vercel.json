@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npm install",
-  "outputDirectory": ".",
-  "public": false,
   "builds": [
     {
       "src": "backend/api/index.js",
@@ -69,10 +66,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "JWT_SECRET": "@jwt_secret",
-    "NODE_ENV": "production"
-  }
+  ]
 }
