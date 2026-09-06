@@ -244,6 +244,14 @@ const query = async (text, params = []) => {
 
     const aadharStr = cleanAadhar(patient_aadhar);
 
+    // Validate patient exists
+    const patientExists = inMemoryDb.patients.find(p => cleanAadhar(p.aadhar_number) === aadharStr);
+    if (!patientExists) {
+      const error = new Error(`Patient with Aadhar ${aadharStr} not found`);
+      error.code = 'PATIENT_NOT_FOUND';
+      throw error;
+    }
+
     const newCase = {
       id: inMemoryDb.case_id_seq++,
       patient_aadhar: aadharStr,
@@ -272,6 +280,7 @@ const query = async (text, params = []) => {
     };
 
     inMemoryDb.case_sheets.push(newCase);
+    console.log('✅ Case sheet saved to in-memory DB:', newCase.id);
     return { rows: [newCase], rowCount: 1 };
   }
 
@@ -285,7 +294,14 @@ const query = async (text, params = []) => {
         rows: [{
           ...cs,
           doctor_name: doc ? doc.name : 'Dr. AYUSH',
-          patient_name: patient ? patient.full_name : 'Patient'
+          doctor_email: doc ? doc.email : '',
+          doctor_system: doc ? doc.ayush_system : cs.ayush_system,
+          patient_name: patient ? patient.full_name : 'Patient',
+          patient_gender: patient ? patient.gender : null,
+          patient_dob: patient ? patient.date_of_birth : null,
+          patient_phone: patient ? patient.phone : null,
+          patient_address: patient ? patient.address : null,
+          patient_opd_token: patient ? patient.opd_token : null
         }],
         rowCount: 1
       };
